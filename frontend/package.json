@@ -7,7 +7,8 @@
   "private": true,
   "scripts": {
     "lint": "eslint --ext .js,.ts,.vue ./",
-    "test": "echo \"No test specified\" && exit 0"
+    "test": "echo \"No test specified\" && exit 0",
+    "dev": "npx quasar dev -m pwa"
   },
   "dependencies": {
     "@quasar/extras": "^1.0.0",
@@ -27,7 +28,8 @@
     "eslint": "^7.14.0",
     "eslint-config-airbnb-base": "^14.0.0",
     "eslint-plugin-import": "^2.20.1",
-    "eslint-plugin-vue": "^7.0.0"
+    "eslint-plugin-vue": "^7.0.0",
+    "workbox-webpack-plugin": "^6.5.1"
   },
   "browserslist": [
     "last 10 Chrome versions",
