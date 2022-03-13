@@ -1,10 +1,12 @@
 tasks:
   - name: Frontend
+    before: npm install -g firebase-tools && npm npm install -g @quasar/cli
     init: cd widget && npm ci
     command: cd widget && npm run dev
 # Ports to expose on workspace startup
 ports:
   - port: 8080
     onOpen: open-preview
+    visibility: public
   - port: 8000
     visibility: public
