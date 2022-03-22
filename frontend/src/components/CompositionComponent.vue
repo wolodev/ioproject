@@ -22,6 +22,7 @@ import {
   Ref,
 } from 'vue';
 import { Todo, Meta } from './models';
+import useStore from '../stores/counter';
 
 function useClickCount() {
   const clickCount = ref(0);
@@ -58,6 +59,8 @@ export default defineComponent({
     },
   },
   setup(props) {
+    const store = useStore();
+    console.log(store);
     return { ...useClickCount(), ...useDisplayTodo(toRef(props, 'todos')) };
   },
 });
