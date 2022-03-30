@@ -1,6 +1,6 @@
 <template>
-  <q-card>
-    <q-card-section>
+  <q-card class="column" id="products-filters">
+    <q-card-section class="col-grow">
       <ProductsFilters />
     </q-card-section>
     <q-separator />
@@ -17,4 +17,9 @@ import ProductsGrid from './ProductsGrid.vue';
 
 <style lang="scss" scoped>
 
+</style>
+<style lang="scss" scoped>
+#products-filters {
+  width: 90%;
+}
 </style>

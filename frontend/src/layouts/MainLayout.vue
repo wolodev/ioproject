@@ -12,14 +12,14 @@
         />
 
         <q-toolbar-title>
-          Skin and hair routine
+          Skin and hair routine     {{displayName}}
         </q-toolbar-title>
       </q-toolbar>
     </q-header>
 
     <q-drawer
+      v-if="id"
       v-model="leftDrawerOpen"
-      show-if-above
       bordered
       overlay
     >
@@ -46,14 +46,14 @@
 
 <script setup>
 import { ref } from 'vue';
+import { storeToRefs } from 'pinia';
 import EssentialLink from 'components/EssentialLink.vue';
 import useUserStore from 'src/stores/user';
 const leftDrawerOpen = ref(false)
-const { id } = useUserStore();
+const { id, displayName } = storeToRefs(useUserStore());
 const toggleLeftDrawer = () => {
   leftDrawerOpen.value = !leftDrawerOpen.value
 }
-
 const linksList = [
   {
     title: 'Account',
@@ -84,5 +84,5 @@ const linksList = [
     routerLink: true
   },
 ];
-
+console.log('START', leftDrawerOpen.value)
 </script>

@@ -11,9 +11,9 @@ import firebase from 'firebase/app';
 import 'firebase/auth';
 import * as firebaseui from 'firebaseui';
 import 'firebaseui/dist/firebaseui.css';
-import useStore from 'src/stores/user';
+import useStore from '../stores/user';
 import { get } from 'lodash';
-import { User } from 'src/stores/models';
+import { User } from '../stores/models';
 
 export default defineComponent({
   name: 'FirebaseAuthentication',
@@ -58,7 +58,7 @@ export default defineComponent({
     }
 
     const firebaseConfigUI = {
-      signInSuccessUrl: '/',
+      signInSuccessUrl: '/account',
       signInOptions: [
         // Leave the lines as is for the providers you want to offer your users.
         // These need to be independently enabled through the web console.
