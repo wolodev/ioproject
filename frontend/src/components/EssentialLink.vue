@@ -2,8 +2,10 @@
   <q-item
     clickable
     tag="a"
-    target="_blank"
-    :href="link"
+    v-bind="{
+      [routerLink ? 'to' : 'href']: link,
+      target: routerLink ? '_self' : '_blank'
+    }"
   >
     <q-item-section
       v-if="icon"
@@ -14,9 +16,7 @@
 
     <q-item-section>
       <q-item-label>{{ title }}</q-item-label>
-      <q-item-label caption>
-        {{ caption }}
-      </q-item-label>
+      <q-item-label caption>{{ caption }}</q-item-label>
     </q-item-section>
   </q-item>
 </template>
@@ -29,23 +29,24 @@ export default defineComponent({
   props: {
     title: {
       type: String,
-      required: true,
+      required: true
     },
-
     caption: {
       type: String,
-      default: '',
+      default: ''
     },
-
     link: {
       type: String,
-      default: '#',
+      default: '#'
     },
-
     icon: {
       type: String,
-      default: '',
+      default: ''
     },
-  },
+    routerLink: {
+      type: Boolean,
+      default: false
+    }
+  }
 });
 </script>

@@ -22,12 +22,11 @@ import {
   Ref,
 } from 'vue';
 import { Todo, Meta } from './models';
-import useStore from '../stores/counter';
 
 function useClickCount() {
   const clickCount = ref(0);
   function increment() {
-    clickCount.value += 1;
+    clickCount.value += 1
     return clickCount.value;
   }
 
@@ -40,27 +39,25 @@ function useDisplayTodo(todos: Ref<Todo[]>) {
 }
 
 export default defineComponent({
-  name: 'CompositionComponent',
+  name: 'ExampleComponent',
   props: {
     title: {
       type: String,
-      required: true,
+      required: true
     },
     todos: {
       type: Array as PropType<Todo[]>,
-      default: () => [],
+      default: () => []
     },
     meta: {
       type: Object as PropType<Meta>,
-      required: true,
+      required: true
     },
     active: {
-      type: Boolean,
-    },
+      type: Boolean
+    }
   },
   setup(props) {
-    const store = useStore();
-    console.log(store);
     return { ...useClickCount(), ...useDisplayTodo(toRef(props, 'todos')) };
   },
 });
