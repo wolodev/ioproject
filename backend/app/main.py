@@ -1,8 +1,14 @@
-from fastapi import FastAPI
+from fastapi import Depends, FastAPI
 
-app = FastAPI()
+from app.api.api import api_router
+from app.core import auth
+
+application = FastAPI()
 
 
-@app.get("/")
-def read_root():
+application.include_router(api_router)
+
+
+@application.get("/")
+async def read_root(token=Depends(auth.validate_token)):
     return {"Hello": "World"}
