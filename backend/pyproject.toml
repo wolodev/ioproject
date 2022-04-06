@@ -8,9 +8,12 @@ authors = ["Your Name <you@example.com>"]
 python = "^3.9"
 fastapi = "^0.75.0"
 uvicorn = {extras = ["standard"], version = "^0.17.6"}
+python-jose = {extras = ["cryptography"], version = "^3.3.0"}
+passlib = {extras = ["bcrypt"], version = "^1.7.4"}
+python-multipart = "^0.0.5"
 
 [tool.poetry.dev-dependencies]
-pytest = "^5.2"
+pytest = "^6.0"
 pytest-cov = "^3.0.0"
 pre-commit = "^2.17.0"
 flake8 = "^4.0.1"
@@ -23,10 +26,10 @@ multi_line_output = 3
 include_trailing_comma = true
 force_grid_wrap = 0
 use_parentheses = true
-line_length = 150
+line_length = 120
 
 [tool.black]
-line-length = 150
+line-length = 120
 target-version = ['py38']
 include = '\.pyi?$'
 exclude = '''
@@ -48,6 +51,14 @@ exclude = '''
                      # the root of the project
 )
 '''
+
+[tool.pytest.ini_options]
+minversion = "6.0"
+addopts = "-ra -q"
+testpaths = [
+    "tests",
+]
+
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
