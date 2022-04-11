@@ -35,6 +35,7 @@ def _create_token(
     payload["exp"] = expire
     payload["iat"] = datetime.utcnow()
     payload["sub"] = str(sub)
+    print(jwt.encode(payload, settings.SECRET_KEY, algorithm=settings.ALGORITHM))
     return jwt.encode(payload, settings.SECRET_KEY, algorithm=settings.ALGORITHM)
 
 
@@ -44,9 +45,10 @@ def validate_token(token: str = Depends(oauth2_scheme)):
         detail="Could not validate credentials",
         headers={"WWW-Authenticate": "Bearer"},
     )
+    print(token)
     try:
         payload = jwt.decode(token, settings.SECRET_KEY, algorithms=[settings.ALGORITHM])
-        username = payload.get("user")
+        username = payload.get("sub")
         if username != settings.USER_NAME:
             raise credentials_exception
     except JWTError:
