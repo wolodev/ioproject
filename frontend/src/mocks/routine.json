@@ -1,0 +1,17 @@
+{
+  "id": 1,
+  "name": "Sunday Relax",
+  "type": "skin",
+  "createDate": "2021-01-21 20:20:20",
+  "products": [
+    {
+      "id": 1,
+      "dose": "15g"
+    },
+    {
+      "id": 25,
+      "dose": "5g"
+    }
+  ],
+  "time": "evening"
+}
