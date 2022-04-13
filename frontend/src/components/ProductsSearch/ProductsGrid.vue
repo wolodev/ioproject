@@ -2,7 +2,7 @@
    <div class="q-pa-md">
     <q-table
       grid
-      :rows="rows"
+      :rows="products"
       :columns="columns"
       row-key="name"
       hide-header
@@ -27,8 +27,23 @@
   </div>
 </template>
 
-<script>
-import { ref } from 'vue'
+<script setup lang="ts">
+import { ref, defineProps } from 'vue'
+
+type Product = {
+  name: string,
+  type: string,
+  price: number,
+}
+
+interface Props {
+  readonly?: boolean,
+  routineView?: boolean,
+  products: Product[]
+}
+
+
+defineProps<Props>()
 
 const columns = [
   {
@@ -36,11 +51,10 @@ const columns = [
     required: true,
     label: 'Dessert (100g serving)',
     align: 'left',
-    field: row => row.name,
-    format: val => `${val}`,
+    field: 'name',
     sortable: true
   },
-  { name: 'price', label: 'Price ($)', field: 'price' }
+  { name: 'price', label: 'Price ($)', field: 'price' },
 ]
 
 const rows = [
@@ -165,16 +179,7 @@ const rows = [
     price: 65
   }
 ]
-
-export default {
-  setup () {
-    return {
-      filter: ref(''),
-      columns,
-      rows
-    }
-  }
-}
+const filter = ref('')
 </script>
 
 <style lang="scss" scoped>

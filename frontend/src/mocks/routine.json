@@ -5,12 +5,10 @@
   "createDate": "2021-01-21 20:20:20",
   "products": [
     {
-      "id": 1,
-      "dose": "15g"
+      "id": 1
     },
     {
-      "id": 25,
-      "dose": "5g"
+      "id": 25
     }
   ],
   "time": "evening"

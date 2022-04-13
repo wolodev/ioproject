@@ -8,13 +8,7 @@ export const handlers = [
     // Persist user's authentication in the session
     sessionStorage.setItem('is-authenticated', 'true');
 
-    return res(
-      ctx.json({
-        products,
-      }),
-      ctx.status(200),
-      ctx.delay(2000)
-    );
+    return res(ctx.json(products), ctx.status(200), ctx.delay(2000));
   }),
 
   rest.get('/routines', (req, res, ctx) => {

@@ -12,7 +12,7 @@
         />
 
         <q-toolbar-title>
-          Skin and hair routine     {{displayName}}
+          Skin and hair routine
         </q-toolbar-title>
       </q-toolbar>
     </q-header>
@@ -37,9 +37,23 @@
         />
       </q-list>
     </q-drawer>
-
     <q-page-container>
-      <router-view />
+      <RouterView v-slot="{ Component }" :key="$route.fullPath">
+        <template v-if="Component">
+          <Transition mode="out-in">
+            <Suspense>
+              <component :is="Component"></component>
+              <template #fallback>
+                <q-spinner-hourglass
+                    color="primary"
+                    size="6em"
+                    class="fixed-center"
+                  />
+              </template>
+            </Suspense>
+          </Transition>
+        </template>
+      </RouterView>
     </q-page-container>
   </q-layout>
 </template>
@@ -50,7 +64,7 @@ import { storeToRefs } from 'pinia';
 import EssentialLink from 'components/EssentialLink.vue';
 import useUserStore from 'src/stores/user';
 const leftDrawerOpen = ref(false)
-const { id, displayName } = storeToRefs(useUserStore());
+const { id } = storeToRefs(useUserStore());
 const toggleLeftDrawer = () => {
   leftDrawerOpen.value = !leftDrawerOpen.value
 }
@@ -66,7 +80,7 @@ const linksList = [
     title: 'My Routines',
     caption: '',
     icon: 'checklist',
-     link: '/routines',
+     link: '/routinesList',
     routerLink: true
   },
   {
@@ -81,6 +95,13 @@ const linksList = [
     caption: '',
     icon: 'search',
     link: '/login',
+    routerLink: true
+  },
+  {
+    title: 'Routine tracker',
+    caption: '',
+    icon: 'today',
+    link: '/tracker',
     routerLink: true
   },
 ];

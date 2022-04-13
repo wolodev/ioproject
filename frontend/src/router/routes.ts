@@ -33,6 +33,32 @@ const routes: RouteRecordRaw[] = [
       { path: '', component: () => import('pages/RecommendationPage.vue') },
     ],
   },
+  {
+    path: '/routinesList',
+    name: 'routinesList',
+    component: () => import('layouts/MainLayout.vue'),
+    children: [
+      { path: '', component: () => import('pages/RoutinesListPage.vue') },
+    ],
+  },
+  {
+    path: '/routines/:id',
+    name: 'routines',
+    component: () => import('layouts/MainLayout.vue'),
+    children: [{ path: '', component: () => import('pages/RoutinePage.vue') }],
+  },
+  {
+    path: '/routines/:id',
+    name: 'routines',
+    component: () => import('layouts/MainLayout.vue'),
+    children: [{ path: '', component: () => import('pages/RoutinePage.vue') }],
+  },
+  {
+    path: '/tracker',
+    name: 'tracker',
+    component: () => import('layouts/MainLayout.vue'),
+    children: [{ path: '', component: () => import('pages/TrackerPage.vue') }],
+  },
 
   // Always leave this as last one,
   // but you can also remove it
