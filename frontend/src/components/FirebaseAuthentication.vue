@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 <template>
-  <div>
+  <div id="auth-widget" class="flex column justify-center items-center">
+    <img id="logo" width="100" src="~assets/logo.png" alt="">
     <div id="firebaseui-auth-container"></div>
   </div>
 </template>
@@ -79,6 +80,7 @@ export default defineComponent({
         signInFailure: signInAttempFailure,
         uiShown: firebaseUiShown,
       },
+      signInFlow: 'popup'
     };
 
     const app = firebase.initializeApp(firebaseConfig);
@@ -92,3 +94,18 @@ export default defineComponent({
   },
 });
 </script>
+
+<style lang="scss">
+#auth-widget {
+  background: white;
+  box-shadow: 0 2px 2px 0 rgb(0 0 0 / 14%), 0 3px 1px -2px rgb(0 0 0 / 20%), 0 1px 5px 0 rgb(0 0 0 / 12%);
+  padding-top: 15px;
+  #logo {
+    padding-bottom: 10px;
+  };
+
+  .mdl-shadow--2dp {
+    box-shadow: none !important;
+  }
+}
+</style>
