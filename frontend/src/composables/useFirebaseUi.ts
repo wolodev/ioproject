@@ -5,30 +5,30 @@ import { onMounted } from 'vue';
 const { getAuth, getAuthProviders } = useFirebase();
 const authProviders = getAuthProviders();
 
-function signInSuccessWithAuthResult(authResult, redirectUrl) {
+/* tslint:disable-next-line */
+function signInSuccessWithAuthResult(authResult: object, redirectUrl?: string) {
   console.log('authResult', authResult);
   console.log('redirectUrl', redirectUrl);
-  setUser(formatUser(authResult));
-  // Do what you wish with authResult... save to session, cookie, etc.
 }
 // Note, bad credentials is not a sign-in failure
-function signInFailure(error) {
-  // eslint-disable-next-line no-alert
+function signInFailure(error: firebaseui.auth.AuthUIError) {
   alert('Sign in failed. See dev console for error response');
-  console.log('error', error);
+  console.error('error', error);
 }
+
 function uiShown() {
   console.log('Firebase UI widget rendered');
 }
 
 export default function useFirebaseUi(
   containerId = '#firebaseui-auth-container',
-  callbacks = {
+  callbacks = {}
+) {
+  const defaultCallbacks = {
     signInSuccessWithAuthResult,
     signInFailure,
     uiShown,
-  }
-) {
+  };
   const auth = getAuth();
   const ui = new firebaseui.auth.AuthUI(auth);
   const firebaseConfigUI = {
@@ -45,9 +45,9 @@ export default function useFirebaseUi(
     privacyPolicyUrl() {
       window.location.assign('<your-privacy-policy-url>');
     },
-    callbacks,
+    callbacks: { ...defaultCallbacks, ...callbacks },
     signInFlow: 'popup',
-  };
+  } as firebaseui.auth.Config;
 
   onMounted(() => {
     ui.start(containerId, firebaseConfigUI);

@@ -1,4 +1,5 @@
 import { ref } from 'vue';
+import type { Ref } from 'vue';
 import firebase from 'firebase/app';
 import 'firebase/firestore';
 import 'firebase/auth';
@@ -12,15 +13,13 @@ const firebaseConfig = {
   measurementId: 'G-JYHKVQXQG1',
 };
 
-const firebaseInitialized = ref(false);
-const app = ref(null);
-const auth = ref(null);
-const firestore = ref(null);
+const app: Ref<null | firebase.app.App> = ref(null);
+const auth: Ref<null | firebase.auth.Auth> = ref(null);
+const firestore: Ref<null | firebase.firestore.Firestore> = ref(null);
 export default function useFirebase() {
   function getFirebase() {
-    if (!firebaseInitialized.value) {
+    if (!app.value) {
       app.value = firebase.initializeApp(firebaseConfig);
-      firebaseInitialized.value = true;
     }
     return app.value;
   }
