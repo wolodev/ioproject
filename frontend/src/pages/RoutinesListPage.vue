@@ -32,7 +32,11 @@
 <script setup>
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
-import { api } from 'src/boot/axios'
+import useFirebase from 'src/composables/useFirebase';
+const { getFireStore } = useFirebase()
+const fireStore = getFireStore();
+const routinesCollection = await fireStore.collection('routines').get();
+const routines = routinesCollection.docs.map(doc => ({...doc.data(), id: doc.id}))
 const columns = [
   {
     name: 'name',
@@ -51,12 +55,10 @@ const columns = [
     sortable: true
   },
 ]
-const response = await api.get('routines');
-const originalRows = response.data.routines;
 const loading = ref(false)
 const filter = ref('')
 const rowCount = ref(10)
-const rows = ref([...originalRows])
+const rows = ref([...routines])
 const selected = ref([])
 const router = useRouter()
 
@@ -68,7 +70,7 @@ function addRow () {
   setTimeout(() => {
     const
       index = Math.floor(Math.random() * (rows.value.length + 1)),
-      row = originalRows[ Math.floor(Math.random() * originalRows.length) ]
+      row = routines[ Math.floor(Math.random() * routines.length) ]
 
     if (rows.value.length === 0) {
       rowCount.value = 0

@@ -28,7 +28,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, defineProps } from 'vue'
+import { defineProps } from 'vue'
 
 type Product = {
   name: string,
@@ -57,129 +57,6 @@ const columns = [
   { name: 'price', label: 'Price ($)', field: 'price' },
 ]
 
-const rows = [
-  {
-    name: 'Pixi',
-    price: 24
-  },
-  {
-    name: 'Dixi',
-    price: 37
-  },
-  {
-    name: 'Lixi',
-    price: 23
-  },
-  {
-    name: 'Sixi',
-    price: 67
-  },
-  {
-    name: 'Kixi',
-    price: 49
-  },
-  {
-    name: 'Gixi',
-    price: 94
-  },
-  {
-    name: 'Nixy',
-    price: 98
-  },
-  {
-    name: 'Wyxi',
-    price: 87
-  },
-  {
-    name: 'Zyxi',
-    price: 51
-  },
-  {
-    name: 'Tyxi',
-    price: 65
-  },
-  {
-    name: 'Pixi',
-    price: 24
-  },
-  {
-    name: 'Dixi',
-    price: 37
-  },
-  {
-    name: 'Lixi',
-    price: 23
-  },
-  {
-    name: 'Sixi',
-    price: 67
-  },
-  {
-    name: 'Kixi',
-    price: 49
-  },
-  {
-    name: 'Gixi',
-    price: 94
-  },
-  {
-    name: 'Nixy',
-    price: 98
-  },
-  {
-    name: 'Wyxi',
-    price: 87
-  },
-  {
-    name: 'Zyxi',
-    price: 51
-  },
-  {
-    name: 'Tyxi',
-    price: 65
-  },
-  {
-    name: 'Pixi',
-    price: 24
-  },
-  {
-    name: 'Dixi',
-    price: 37
-  },
-  {
-    name: 'Lixi',
-    price: 23
-  },
-  {
-    name: 'Sixi',
-    price: 67
-  },
-  {
-    name: 'Kixi',
-    price: 49
-  },
-  {
-    name: 'Gixi',
-    price: 94
-  },
-  {
-    name: 'Nixy',
-    price: 98
-  },
-  {
-    name: 'Wyxi',
-    price: 87
-  },
-  {
-    name: 'Zyxi',
-    price: 51
-  },
-  {
-    name: 'Tyxi',
-    price: 65
-  }
-]
-const filter = ref('')
 </script>
 
 <style lang="scss" scoped>
