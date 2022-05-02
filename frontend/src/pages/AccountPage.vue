@@ -10,7 +10,7 @@
       </q-card-section>
       <q-separator inset />
       <q-card-section class="column items-center">
-        <q-btn @click="logout" >Log out</q-btn>
+        <q-btn @click="logout" to="/login">Log out</q-btn>
       </q-card-section>
     </q-card>
   </q-page>

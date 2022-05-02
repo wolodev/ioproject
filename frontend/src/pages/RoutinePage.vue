@@ -14,31 +14,15 @@
   </q-page>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import useFirebase from 'src/composables/useFirebase';
-import ProductsGrid from '../components/ProductsSearch/ProductsGrid';
+import ProductsGrid from '../components/ProductsSearch/ProductsGrid.vue';
 import { useRoute } from 'vue-router';
 import { api } from 'src/boot/axios';
 import { ref } from 'vue';
 import { useQuasar } from 'quasar';
 
 const $q = useQuasar();
-
-function confirm () {
-  $q.dialog({
-    title: 'Confirm',
-    message: 'Would you like to turn on the wifi?',
-    cancel: true,
-    persistent: true
-  }).onOk(() => {
-    console.log('Robię Zapis')
-    editable.value = !editable.value
-    
-  }).onCancel(() => {
-    console.log('NIE ROBIE ZAPISU')
-    // console.log('>>>> Cancel')
-  })
-}
 
 const editable = ref(false);
 const router = useRoute();
@@ -47,17 +31,21 @@ const { getFireStore } = useFirebase()
 const fireStore = getFireStore();
 console.log('FIRESTORE', fireStore);
 
-const routine = await fireStore.doc(`routines/${router.params.id}`).get()
+const docReference = fireStore.doc(`routines/${router.params.id}`)
+const routine = await docReference.get()
 
 if (!routine.exists) {
-  console.error('Routine', router.params.id, 'does not exist');
+  throw `Routine ${router.params.id} does not exist`;
 }
 const data = routine.data();
+const name = ref('');
+const type = ref('');
+if (data) {
+  name.value = data.name;
+  type.value = data.type;
+}
 
-const name = ref(data.name);
-const type = ref(data.type);
 const ids = [].map(el => el.id).join(',')
-
 
 function handleIconClick() {
   if (editable.value) {
@@ -66,6 +54,26 @@ function handleIconClick() {
     editable.value = !editable.value
   }
 }
+
+function confirm () {
+  $q.dialog({
+    title: 'Confirm',
+    message: 'Are you sure to want to save changes?',
+    cancel: true,
+    persistent: true
+  }).onOk(() => {
+    console.log('Robię Zapis')
+    editable.value = !editable.value
+    docReference.update({
+      'name': name.value,
+      'type': type.value
+    })
+  }).onCancel(() => {
+    console.log('NIE ROBIE ZAPISU')
+    // console.log('>>>> Cancel')
+  })
+}
+
 
 
 const productsResponse = await api.get(`/products?id=${ids}`)
