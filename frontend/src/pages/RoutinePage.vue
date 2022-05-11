@@ -5,41 +5,44 @@
       <q-icon size="20px" :name="editable ? 'save' : 'edit'" class="col-1 clickable"  @click="handleIconClick"/>
     </div>
     <q-select :readonly="!editable" v-model="type" :options="['skin', 'hair']" label="Type" />
+    <q-select multiple 
+    :readonly="!editable" 
+    v-model="daysOfTheWeekModel" 
+    :options="daysOfTheWeekOptions" label="Days of the week" 
+    option-value="id"
+    option-label="name"
+    
+    />
     <div class="q-pa-md row items-center justify-between">
       <p class="q-mb-none flex items-center justify-center">Products</p>
-      <q-btn disabled color="primary" icon="add" label="Dodaj produkt" @click="onClick" />
+      <q-btn disabled color="primary" icon="add" label="Dodaj produkt"/>
     </div>
     
     <ProductsGrid :products="products" :routineView="true"/>
   </q-page>
 </template>
-
+ 
 <script setup lang="ts">
-import useFirebase from 'src/composables/useFirebase';
-import ProductsGrid from '../components/ProductsSearch/ProductsGrid.vue';
+
+import ProductsGrid from '../components/Products/ProductsGrid.vue';
 import { useRoute } from 'vue-router';
-import { api } from 'src/boot/axios';
 import { ref } from 'vue';
 import { useQuasar } from 'quasar';
-
-const $q = useQuasar();
-
-const editable = ref(false);
+import useRoutine from 'src/composables/useRoutine';
+import { daysOfTheWeek } from 'src/consts';
+const { get: getRoutine, update: updateRoutine } = useRoutine();
 const router = useRoute();
-
-const { getFireStore } = useFirebase()
-const fireStore = getFireStore();
-console.log('FIRESTORE', fireStore);
-
-const docReference = fireStore.doc(`routines/${router.params.id}`)
-const routine = await docReference.get()
-
-if (!routine.exists) {
-  throw `Routine ${router.params.id} does not exist`;
-}
-const data = routine.data();
+const $q = useQuasar();
+const daysOfTheWeekOptions = Object.entries(daysOfTheWeek).map(day => ({
+    id: day[1],
+    name: day[0]
+}))
+const editable = ref(false);
+const id = router.params.id as string;
+const data = await getRoutine(id);
 const name = ref('');
 const type = ref('');
+const daysOfTheWeekModel = ref([])
 if (data) {
   name.value = data.name;
   type.value = data.type;
@@ -64,7 +67,7 @@ function confirm () {
   }).onOk(() => {
     console.log('Robię Zapis')
     editable.value = !editable.value
-    docReference.update({
+    updateRoutine(id, {
       'name': name.value,
       'type': type.value
     })
@@ -74,10 +77,6 @@ function confirm () {
   })
 }
 
-
-
-const productsResponse = await api.get(`/products?id=${ids}`)
-const products = productsResponse.data.slice(0, 2)
 </script>
 
 <style lang="scss" scoped></style>

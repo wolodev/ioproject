@@ -18,7 +18,7 @@
         <q-btn color="primary" :disable="loading" label="Add routine" @click="addRow" />
         <q-btn class="q-ml-sm" color="primary" :disable="loading" label="Remove routine" @click="removeRow" />
         <q-space />
-        <q-input dense debounce="300" color="primary" v-model="filter">
+        <q-input class="q-ml-md" dense debounce="300" color="primary" v-model="filter">
           <template v-slot:append>
             <q-icon name="search" />
           </template>
@@ -34,10 +34,10 @@
 import AddRoutineDialog from 'src/components/Routine/AddRoutineDialog.vue';
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
-import useFirebase from 'src/composables/useFirebase';
+import useRoutine from 'src/composables/useRoutine';
+import { Routine } from 'src/components/models';
 const promptVisible = ref(false)
-const { getFireStore } = useFirebase()
-const fireStore = getFireStore();
+const { getAll, remove } = useRoutine()
 const columns = [
   {
     name: 'name',
@@ -57,20 +57,15 @@ const columns = [
   }
 ]
 
-const routines = await getRoutines();
+const routines: Routine[] = await getAll();
 const loading = ref(false)
 const filter = ref('')
 const rows = ref([...routines])
 const selected = ref([])
 const router = useRouter()
 
-async function getRoutines() {
-  const routinesCollection = await fireStore.collection('routines').get();
-  return routinesCollection.docs.map(doc => ({...doc.data(), id: doc.id}))
-}
-
-async function refreshRoutineList() {
-  rows.value = await getRoutines();
+async function refreshRoutineList(): Promise<void> {
+  rows.value = await getAll();
 };
 
 function rowClicked (event: Event, row: { id: string }) {
@@ -85,9 +80,8 @@ async function removeRow () {
   loading.value = true
   const iterations = selected.value.length;
   for (let i = 0; i < iterations; i++) {
-    const element: {id: string} = selected.value[i];
-    const docReference = fireStore.doc(`routines/${element.id}`)
-    await docReference.delete()
+    const element: Routine = selected.value[i];
+    remove(element.id)
     await refreshRoutineList()
   }
   loading.value = false

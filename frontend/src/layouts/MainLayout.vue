@@ -105,5 +105,4 @@ const linksList = [
     routerLink: true
   },
 ];
-console.log('START', leftDrawerOpen.value)
 </script>
