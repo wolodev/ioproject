@@ -3,9 +3,9 @@
     <q-select
       id="categories-select"
       label="Category"
-      multiple
+      single
       :options="options"
-      v-model="categories">
+      v-model="category">
     </q-select>
     <q-input v-model="query" placeholder="Search" class="col"></q-input>
     <q-btn right icon="search" round dense flat id="search-button" />
@@ -13,10 +13,14 @@
 </template>
 
 <script setup>
-import { ref } from 'vue';
-const options = ['Płyny', 'Serum', 'Kremy', 'Oleje']
-const categories = ref([])
-const query = ref('')
+import { defineEmits, defineProps } from 'vue';
+import { usePropsModel } from '../../composables/usePropsModel';
+
+const options = ['Skin', 'Hair']
+const emit = defineEmits(['update:category', 'update:query'])
+const props = defineProps(['category', 'query'])
+const category = usePropsModel(props, emit, 'category')
+const query = usePropsModel(props, emit, 'query', 500)
 </script>
 
 <style lang="scss">
