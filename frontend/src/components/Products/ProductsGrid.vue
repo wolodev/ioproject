@@ -30,18 +30,11 @@
 <script setup lang="ts">
 import { defineProps } from 'vue'
 
-type Product = {
-  name: string,
-  type: string,
-  price: number,
-}
-
 interface Props {
   readonly?: boolean,
   routineView?: boolean,
   products: Product[]
 }
-
 
 defineProps<Props>()
 

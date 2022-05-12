@@ -8,8 +8,9 @@
       <template v-slot:before>
         <div class="q-pa-md">
           <q-date
-            v-model="date"
-            :events="events"
+            first-day-of-week="1"
+            v-model="dateModel"
+            :events="eventFn"
             event-color="orange"
           />
         </div>
@@ -17,26 +18,29 @@
 
       <template v-slot:after>
         <q-tab-panels
-          v-model="date"
+          v-model="dateModel"
           animated
           transition-prev="jump-up"
           transition-next="jump-up"
         >
-          <q-tab-panel name="2019/02/01">
-            <TrackedRoutine />
-          </q-tab-panel>
 
-          <q-tab-panel name="2019/02/05">
-            <div class="text-h4 q-mb-md">2019/02/05</div>
-            <p>Lorem ipsum dolor sit, amet consectetur adipisicing elit. Quis praesentium cumque magnam odio iure quidem, quod illum numquam possimus obcaecati commodi minima assumenda consectetur culpa fuga nulla ullam. In, libero.</p>
-            <p>Lorem ipsum dolor sit, amet consectetur adipisicing elit. Quis praesentium cumque magnam odio iure quidem, quod illum numquam possimus obcaecati commodi minima assumenda consectetur culpa fuga nulla ullam. In, libero.</p>
-          </q-tab-panel>
-
-          <q-tab-panel name="2019/02/06">
-            <div class="text-h4 q-mb-md">2019/02/06</div>
-            <p>Lorem ipsum dolor sit, amet consectetur adipisicing elit. Quis praesentium cumque magnam odio iure quidem, quod illum numquam possimus obcaecati commodi minima assumenda consectetur culpa fuga nulla ullam. In, libero.</p>
-            <p>Lorem ipsum dolor sit, amet consectetur adipisicing elit. Quis praesentium cumque magnam odio iure quidem, quod illum numquam possimus obcaecati commodi minima assumenda consectetur culpa fuga nulla ullam. In, libero.</p>
-            <p>Lorem ipsum dolor sit, amet consectetur adipisicing elit. Quis praesentium cumque magnam odio iure quidem, quod illum numquam possimus obcaecati commodi minima assumenda consectetur culpa fuga nulla ullam. In, libero.</p>
+          <q-tab-panel :key="dateModel" :name="dateModel">
+            <Suspense v-if="eventFn(dateModel)">
+              <TrackedRoutine
+              :day="dateModel"
+              :weekday="getWeekDayForDate(dateModel)"
+              />
+              <template #fallback>
+                <q-spinner-hourglass
+                    color="primary"
+                    size="6em"
+                    class="center"
+                  />
+              </template>
+            </Suspense>
+            <div v-else>
+              WHooops ! Wygląda na to że nie masz jeszcze rutyny w tym dniu. Dodaj
+            </div>
           </q-tab-panel>
         </q-tab-panels>
       </template>
@@ -44,20 +48,33 @@
   </q-page>
 </template>
 
-<script>
+<script setup lang="ts">
+import { date } from 'quasar'
 import { ref } from 'vue'
 import TrackedRoutine from '../components/Routine/TrackedRoutine.vue'
+const { formatDate, getDayOfWeek, startOfDate } = date;
+//const date = date.extractDate('21/03/1985', 'DD/MM/YYYY')
 
-export default {
-  setup () {
-    return {
-      splitterModel: ref(30),
-      date: ref('2019/02/01'),
-      events: [ '2019/02/01','2019/02/01', '2019/02/05', '2019/02/06' ]
-    }
-  },
-  components: {
-    TrackedRoutine
-  }
+const timestamp = Date.now()
+const today = formatDate(timestamp, 'YYYY/MM/DD')
+const firstDayOfMonth = startOfDate(today, 'month');
+const firstDayOfMonthWeekDay = getDayOfWeek(firstDayOfMonth)
+const daysWithRoutines: dayNumber[] = [1, 3, 7]
+
+function getWeekDayForDate(day: string): dayNumber {
+  const dayDiff = Number(day.split('/')[2]) - 1;
+  const weekday = (firstDayOfMonthWeekDay + dayDiff) % 7
+  return (weekday ? weekday : 7) as dayNumber;
 }
+
+const eventFn = (day: string) => {
+  if (daysWithRoutines.includes(getWeekDayForDate(day))) {
+    return true
+  }
+  return false;
+}
+
+const splitterModel= ref(30);
+const dateModel = ref(today); // ref('2019/02/01')
+
 </script>

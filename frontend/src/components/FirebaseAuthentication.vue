@@ -6,20 +6,21 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import useUserStore from '../stores/user';
 import useFirebaseUI from '../composables/useFirebaseUi';
 import { useRouter } from 'vue-router'
 import { get } from 'lodash';
+import { User } from 'src/stores/models';
+
 const { setUser } = useUserStore()
 const router = useRouter()
-function signInSuccessWithAuthResult(authResult) {
-  console.log('AAAUTH RESULT', authResult)
+function signInSuccessWithAuthResult(authResult: object): void {
   setUser(formatUser(authResult));
   router.push('/tracker')
 }
 
-function formatUser(authResult) {
+function formatUser(authResult: object): User {
   return {
     isNewUser: get(authResult, 'additionalUserInfo.isNewUser', true),
     email: get(authResult, 'user.email', ''),

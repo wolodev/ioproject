@@ -13,7 +13,20 @@ declare module '@vue/runtime-core' {
 // good idea to move this instance creation inside of the
 // "export default () => {}" function below (which runs individually
 // for each client)
-const api = axios.create({ baseURL: '' });
+const token =
+  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0eXBlIjoiYWNjZXNzX3Rva2VuIiwiZXhwIjoxNjUyMzc0MjM5LCJpYXQiOjE2NTIyODc4MzksInN1YiI6ImFkbWluIn0.h8IQiOGzcmxuVne8b3UcW2Qm5ezaQPLPIJkgCfmjFXcaf';
+const headers = {
+  Authorization: `Bearer ${token}`,
+  'Access-Control-Allow-Origin': 'http://ioproject-backend.herokuapp.com/',
+  'Content-Type': 'application/json',
+  mode: 'no-cors',
+};
+
+const api = axios.create({
+  baseURL: process.env.API,
+  headers,
+  withCredentials: true,
+});
 
 export default boot(({ app }) => {
   // for use inside Vue files (Options API) through this.$axios and this.$api

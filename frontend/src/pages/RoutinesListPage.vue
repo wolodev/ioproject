@@ -9,7 +9,7 @@
       :loading="loading"
       selection="multiple"
       v-model:selected="selected"
-      row-key="name"
+      row-key="id"
       clickable
       @row-click="rowClicked"
     >
@@ -18,7 +18,7 @@
         <q-btn color="primary" :disable="loading" label="Add routine" @click="addRow" />
         <q-btn class="q-ml-sm" color="primary" :disable="loading" label="Remove routine" @click="removeRow" />
         <q-space />
-        <q-input dense debounce="300" color="primary" v-model="filter">
+        <q-input class="q-ml-md" dense debounce="300" color="primary" v-model="filter">
           <template v-slot:append>
             <q-icon name="search" />
           </template>
@@ -26,25 +26,25 @@
       </template>
     </q-table>
   </div>
+  <AddRoutineDialog :visible="promptVisible" v-on:close="promptVisible = false" v-on:routine-added="refreshRoutineList"/>
   </q-page>
 </template>
 
-<script setup>
+<script setup lang="ts">
+import AddRoutineDialog from 'src/components/Routine/AddRoutineDialog.vue';
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
-import useFirebase from 'src/composables/useFirebase';
-const { getFireStore } = useFirebase()
-const fireStore = getFireStore();
-const routinesCollection = await fireStore.collection('routines').get();
-const routines = routinesCollection.docs.map(doc => ({...doc.data(), id: doc.id}))
+import useRoutine from 'src/composables/useRoutine';
+const promptVisible = ref(false)
+const { getAll, remove } = useRoutine()
 const columns = [
   {
     name: 'name',
     required: true,
     label: 'Name',
     align: 'left',
-    field: row => row.name,
-    format: val => `${val}`,
+    field: (row: { name: string; }) => row.name,
+    format: (val: string) => `${val}`,
     sortable: true
   },
   {
@@ -53,42 +53,52 @@ const columns = [
     label: 'Type',
     field: 'type',
     sortable: true
-  },
+  }
 ]
+
+const routines: Routine[] = await getAll();
 const loading = ref(false)
 const filter = ref('')
-const rowCount = ref(10)
 const rows = ref([...routines])
 const selected = ref([])
 const router = useRouter()
 
-function rowClicked (event, row) {
+async function refreshRoutineList(): Promise<void> {
+  rows.value = await getAll();
+};
+
+function rowClicked (event: Event, row: { id: string }) {
   router.push(`/routines/${row.id}`)
 }
+
 function addRow () {
-  loading.value = true
-  setTimeout(() => {
-    const
-      index = Math.floor(Math.random() * (rows.value.length + 1)),
-      row = routines[ Math.floor(Math.random() * routines.length) ]
-
-    if (rows.value.length === 0) {
-      rowCount.value = 0
-    }
-
-    row.id = ++rowCount.value
-    const newRow = { ...row } // extend({}, row, { name: `${row.name} (${row.__count})` })
-    rows.value = [ ...rows.value.slice(0, index), newRow, ...rows.value.slice(index) ]
-    loading.value = false
-  }, 500)
+  promptVisible.value = true;
 }
 
-function removeRow () {
+async function removeRow () {
   loading.value = true
-  setTimeout(() => {
-    const index = Math.floor(Math.random() * rows.value.length)
-    rows.value = [ ...rows.value.slice(0, index), ...rows.value.slice(index + 1) ]
-    loading.value = false
-  }, 500)
+  const iterations = selected.value.length;
+  for (let i = 0; i < iterations; i++) {
+    const element: Routine = selected.value[i];
+    remove(element.id)
+    await refreshRoutineList()
+  }
+  loading.value = false
 }
 </script>
+
+
+<style scoped>
+.el-button--text {
+  margin-right: 15px;
+}
+.el-select {
+  width: 300px;
+}
+.el-input {
+  width: 300px;
+}
+.dialog-footer button:first-child {
+  margin-right: 10px;
+}
+</style>

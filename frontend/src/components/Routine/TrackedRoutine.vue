@@ -1,7 +1,7 @@
 <template>
     <div class="q-pa-md">
     <q-table
-      title="Treats"
+      title="Routines"
       :rows="rows"
       :columns="columns"
       :filter="filter"
@@ -11,6 +11,7 @@
       row-key="id"
       clickable
       @row-click="rowClicked"
+      :selected-rows-label="emptyString"
     >
     <template v-slot:body="props">
         <q-tr :props="props">
@@ -34,24 +35,25 @@
           </q-td>
         </q-tr>
       </template>
-      <template v-slot:top>
-        <q-btn color="primary" :disable="loading" label="Toggle done" @click="addRow" />
-        <q-btn class="q-ml-sm" color="primary" :disable="loading" label="Remove routine" @click="removeRow" />
-        <q-space />
-        <q-input dense debounce="300" color="primary" v-model="filter">
-          <template v-slot:append>
-            <q-icon name="search" />
-          </template>
-        </q-input>
-      </template>
     </q-table>
   </div>
 </template>
 
-<script setup>
-import { ref } from 'vue'
+<script setup lang="ts">
+import { ref, watch, defineProps } from 'vue'
+import type { Ref } from 'vue';
 import { useRouter } from 'vue-router'
-import { api } from 'src/boot/axios'
+import { find, omit } from 'lodash';
+import useRoutine from '../../composables/useRoutine';
+
+interface Props {
+  day: string,
+  weekday: dayNumber
+}
+
+const props = defineProps<Props>();
+
+const { queryByDays, update } = useRoutine();
 const columns = [
   {
     name: 'name',
@@ -70,42 +72,45 @@ const columns = [
   },
 
 ]
-const response = await api.get('routines');
-const originalRows = response.data.routines;
+
+const originalRows =  await queryByDays(props.weekday);
 const loading = ref(false)
 const filter = ref('')
-const rowCount = ref(10)
-const rows = ref([...originalRows])
-const selected = ref([])
-const router = useRouter()
+const rows:Ref<Routine[]> = ref([...originalRows])
 
-function rowClicked (event, row) {
+const selected: Ref<Routine[]> = ref(
+  originalRows.filter(row => {
+    return row.done.includes(props.day)
+  })
+)
+const router = useRouter()
+watch(selected, (selected = [], prevSelected=[]) => {
+  selected.forEach((routine: Routine) => {
+    const shouldMark = !find(prevSelected, { 'id': routine.id })
+    if (shouldMark) {
+      console.log('ZAZNACZAM', routine, 'dla', props.day )
+      routine.done.push(props.day),
+      update(routine.id, omit({
+        ...routine
+        }, 'id'))
+    }
+  })
+  prevSelected.forEach((routine) => {
+    const shouldUnMark = !find(selected, { 'id': routine.id })
+    if (shouldUnMark) {
+      console.log('ODZNACZAM', routine, 'dla', props.day)
+      routine.done = routine.done.filter(el => el !== props.day),
+      update(routine.id, omit({
+        ...routine
+        }, 'id'))
+    }
+  })
+})
+
+
+function rowClicked (event: Event, row: Routine) {
   router.push(`/routines/${row.id}`)
 }
-function addRow () {
-  loading.value = true
-  setTimeout(() => {
-    const
-      index = Math.floor(Math.random() * (rows.value.length + 1)),
-      row = originalRows[ Math.floor(Math.random() * originalRows.length) ]
 
-    if (rows.value.length === 0) {
-      rowCount.value = 0
-    }
-
-    row.id = ++rowCount.value
-    const newRow = { ...row } // extend({}, row, { name: `${row.name} (${row.__count})` })
-    rows.value = [ ...rows.value.slice(0, index), newRow, ...rows.value.slice(index) ]
-    loading.value = false
-  }, 500)
-}
-
-function removeRow () {
-  loading.value = true
-  setTimeout(() => {
-    const ids = selected.value.map(selected => selected.id);
-    rows.value = rows.value.filter(row => !ids.includes(row.id))
-    loading.value = false
-  }, 500)
-}
+const emptyString = () => '';
 </script>

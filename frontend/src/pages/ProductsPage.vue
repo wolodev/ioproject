@@ -5,5 +5,5 @@
 </template>
 
 <script setup>
-import ProductsSearch from 'src/components/ProductsSearch/ProductsSearch.vue';
+import ProductsSearch from 'src/components/Products/ProductsSearch.vue';
 </script>

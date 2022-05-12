@@ -5,7 +5,7 @@ import { User } from './models';
 // the first argument is a unique id of the store across your application
 const useUserStore = defineStore('User', {
   state: (): User => ({
-    displayName: 'hej',
+    displayName: '',
     email: '',
     id: '',
     isNewUser: false,
