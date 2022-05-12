@@ -35,7 +35,6 @@ import AddRoutineDialog from 'src/components/Routine/AddRoutineDialog.vue';
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 import useRoutine from 'src/composables/useRoutine';
-import { Routine } from 'src/components/models';
 const promptVisible = ref(false)
 const { getAll, remove } = useRoutine()
 const columns = [
