@@ -88,7 +88,7 @@ watch(selected, (selected = [], prevSelected=[]) => {
   selected.forEach((routine: Routine) => {
     const shouldMark = !find(prevSelected, { 'id': routine.id })
     if (shouldMark) {
-      console.log('ZAZNACZAM', routine, 'dla', props.day )
+      console.log('Mark', routine, 'for', props.day )
       routine.done.push(props.day),
       update(routine.id, omit({
         ...routine
@@ -98,7 +98,7 @@ watch(selected, (selected = [], prevSelected=[]) => {
   prevSelected.forEach((routine) => {
     const shouldUnMark = !find(selected, { 'id': routine.id })
     if (shouldUnMark) {
-      console.log('ODZNACZAM', routine, 'dla', props.day)
+      console.log('Unmark', routine, 'for', props.day)
       routine.done = routine.done.filter(el => el !== props.day),
       update(routine.id, omit({
         ...routine

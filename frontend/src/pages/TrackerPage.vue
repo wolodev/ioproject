@@ -51,7 +51,10 @@
 <script setup lang="ts">
 import { date } from 'quasar'
 import { ref } from 'vue'
+import { flatten, uniq } from 'lodash';
 import TrackedRoutine from '../components/Routine/TrackedRoutine.vue'
+import useRoutine from 'src/composables/useRoutine';
+const { getAll } = useRoutine()
 const { formatDate, getDayOfWeek, startOfDate } = date;
 //const date = date.extractDate('21/03/1985', 'DD/MM/YYYY')
 
@@ -59,7 +62,10 @@ const timestamp = Date.now()
 const today = formatDate(timestamp, 'YYYY/MM/DD')
 const firstDayOfMonth = startOfDate(today, 'month');
 const firstDayOfMonthWeekDay = getDayOfWeek(firstDayOfMonth)
-const daysWithRoutines: dayNumber[] = [1, 3, 7]
+
+const routines = await getAll()
+
+const daysWithRoutines: dayNumber[] = uniq(flatten(routines.map(routine => routine.weekdays))) as dayNumber[]
 
 function getWeekDayForDate(day: string): dayNumber {
   const dayDiff = Number(day.split('/')[2]) - 1;

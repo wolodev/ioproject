@@ -13,7 +13,6 @@ export default function useRoutine() {
   }
 
   async function queryByDays(day: dayNumber): Promise<Routine[]> {
-    console.log(routineRef);
     const routines = await routineRef
       .where('weekdays', 'array-contains', day)
       .get();

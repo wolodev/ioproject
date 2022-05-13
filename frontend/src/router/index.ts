@@ -38,7 +38,7 @@ export default route(function () {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   Router.beforeEach((to, from, next) => {
     const store = useUserStore();
-    console.log('ide z ', from.fullPath, 'na', to.fullPath);
+    console.log('navigation from ', from.fullPath, 'to', to.fullPath);
     if (to.fullPath === '/login' || store.id) {
       next();
     } else {

@@ -32,9 +32,10 @@ type Product = skinProduct | hairProduct;
 interface Routine {
   id: string;
   name: string;
-  type: string;
-  products?: Product[];
+  type: careType;
+  products?: number[];
   done: string[]; // YYYY/MM/DD format
+  weekdays: number[];
 }
 
 interface Meta {

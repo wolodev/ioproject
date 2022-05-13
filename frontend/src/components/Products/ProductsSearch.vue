@@ -4,21 +4,37 @@
       <ProductsFilters 
         v-model:category="filters.category"
         v-model:query="filters.input"
+        :routineView="props.routineView"
       />
     </q-card-section>
     <q-separator />
     <q-card-section>
-      <ProductsGrid :products="products" />
+      <ProductsGrid 
+        :productsManipulation="props.productsManipulation"
+        v-on:add="handleAdd"
+        :products="products"
+        :loading="loading"
+      />
     </q-card-section>
-    {{products}}
   </q-card>
 </template>
 
 <script setup lang="ts">
 import useProducts from '../../composables/useProducts';
-import { reactive, watch,  ref } from 'vue'
+import { reactive, watch, ref, defineProps, unref, defineEmits } from 'vue'
+import type { Ref } from 'vue';
 import ProductsFilters from './ProductsFilters.vue';
 import ProductsGrid from './ProductsGrid.vue';
+
+const emit = defineEmits(['add'])
+const handleAdd = (id: number) => { emit('add', id) }
+type Props = {
+  routineView: boolean,
+  careType: careType,
+  productsManipulation: string
+}
+
+const props = defineProps<Props>()
 const filters: {
   input: string,
   category: careType
@@ -26,13 +42,23 @@ const filters: {
   category: 'skin',
   input: ''
 })
-const products = ref([])
-const { getAll } = useProducts()
-
+if (props.careType) {
+  filters.category = unref(props.careType);
+}
+const products: Ref<Product[]> = ref([])
+const loading = ref(true);
+const { query: productsQuery } = useProducts()
 
 watch(filters, async (newFilters) => {
-  const x = await getAll(newFilters.category)
-  console.log('SZUKAM', newFilters, x);
+  loading.value = true;
+  const data = await productsQuery({
+    type: newFilters.category,
+    query: newFilters.input
+  })
+  products.value = data.slice(0, 20);
+  loading.value = false
+}, {
+  immediate: true
 })
 
 
