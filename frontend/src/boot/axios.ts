@@ -1,5 +1,6 @@
 import { boot } from 'quasar/wrappers';
 import axios, { AxiosInstance } from 'axios';
+import type { AxiosRequestConfig } from 'axios';
 
 declare module '@vue/runtime-core' {
   interface ComponentCustomProperties {
@@ -13,24 +14,35 @@ declare module '@vue/runtime-core' {
 // good idea to move this instance creation inside of the
 // "export default () => {}" function below (which runs individually
 // for each client)
-const token =
-  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0eXBlIjoiYWNjZXNzX3Rva2VuIiwiZXhwIjoxNjUyMzc0MjM5LCJpYXQiOjE2NTIyODc4MzksInN1YiI6ImFkbWluIn0.h8IQiOGzcmxuVne8b3UcW2Qm5ezaQPLPIJkgCfmjFXcaf';
-const headers = {
-  Authorization: `Bearer ${token}`,
-  'Access-Control-Allow-Origin': 'http://ioproject-backend.herokuapp.com/',
-  'Content-Type': 'application/json',
-  mode: 'no-cors',
-};
+// const token =
+//   'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0eXBlIjoiYWNjZXNzX3Rva2VuIiwiZXhwIjoxNjUyMzc0MjM5LCJpYXQiOjE2NTIyODc4MzksInN1YiI6ImFkbWluIn0.h8IQiOGzcmxuVne8b3UcW2Qm5ezaQPLPIJkgCfmjFXcaf';
+// const headers = {
+//   Authorization: `Bearer ${token}`,
+//   // 'Access-Control-Allow-Origin': 'http://ioproject-backend.herokuapp.com/',
+//   // 'Content-Type': 'application/json',
+// };
 
 const api = axios.create({
   baseURL: process.env.API,
-  headers,
-  withCredentials: true,
+  // headers,
+  // withCredentials: true,
 });
-
-export default boot(({ app }) => {
+const axiosGet = api.get;
+export default boot(async ({ app }) => {
   // for use inside Vue files (Options API) through this.$axios and this.$api
+  const response = await axios.post(
+    process.env.API + 'login',
+    'username=admin&password=adminnimda'
+  );
+  const { access_token } = response.data;
+  api.get = (url: string, config: AxiosRequestConfig = {}) => {
+    config.headers = {
+      Authorization: `Bearer ${access_token}`,
+    };
+    return axiosGet(url, config);
+  };
 
+  console.log(response);
   app.config.globalProperties.$axios = axios;
   // ^ ^ ^ this will allow you to use this.$axios (for Vue Options API form)
   //       so you won't necessarily have to import axios in each vue file

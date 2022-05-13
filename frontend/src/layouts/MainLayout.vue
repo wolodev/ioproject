@@ -94,7 +94,7 @@ const linksList = [
     title: 'Find product for yourself!',
     caption: '',
     icon: 'search',
-    link: '/login',
+    link: '/recommendation',
     routerLink: true
   },
   {
