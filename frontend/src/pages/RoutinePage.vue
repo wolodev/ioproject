@@ -17,9 +17,12 @@
     />
     <div class="q-pa-md row items-center justify-between">
       <p class="q-mb-none flex items-center justify-center">Products</p>
-      <q-btn :diasbled="!editable" color="primary" icon="add" label="Add product" @click="promptVisible = true"/>
+      <div>
+        <q-btn color="primary" icon="add" label="Show statistics" @click="showStats" class="q-mr-xl"/>
+        <q-btn :disabled="!editable" color="primary" icon="add" label="Add product" @click="promptVisible = true"/>
+      </div>
     </div>
-    
+    <RoutineStats :routine="form" :visible="statsVisible" @hide="statsVisible = false"/>
     <ProductsGrid :productsManipulation="editable ? 'remove' : null" v-on:remove="removeProduct" :products="products" :routineView="true"/>
     <AddProductDialog 
       v-on:add="addProduct"
@@ -34,12 +37,14 @@
 <script setup lang="ts">
 import AddProductDialog from 'src/components/Products/AddProductDialog.vue';
 import ProductsGrid from '../components/Products/ProductsGrid.vue';
+import RoutineStats from 'src/components/Routine/RoutineStats.vue';
 import { useRoute } from 'vue-router';
 import { ref, reactive, Ref } from 'vue';
 import { useQuasar } from 'quasar';
 import useRoutine from 'src/composables/useRoutine';
 import { daysOfTheWeek } from 'src/consts';
 import useProducts from 'src/composables/useProducts';
+
 const { query: productsQuery } = useProducts();
 const { get: getRoutine, update: updateRoutine } = useRoutine();
 const router = useRoute();
@@ -50,23 +55,33 @@ const daysOfTheWeekOptions = Object.entries(daysOfTheWeek).map(day => ({
 }))
 const promptVisible = ref(false)
 const editable = ref(false);
+const statsVisible = ref(false);
 const id = router.params.id as string;
 const data = await getRoutine(id);
-const form: Omit<Routine, 'id' | 'done'> = reactive({
+const form: Omit<Routine, 'id'> = reactive({
   name: '',
   type: 'skin',
   weekdays: [],
-  products: []
+  products: [],
+  done: []
 })
+
+function showStats() {
+  statsVisible.value = true;
+}
 
 if (data) {
   form.name = data.name;
   form.type = data.type;
   form.weekdays = data.weekdays;
   form.products = data.products ? data.products : [];
+  form.done = data.done ? data.done : []
 }
 const products: Ref<Product[]> = ref([])
-products.value = await getProducts();
+if (form.products.length) {
+  products.value = await getProducts();
+}
+
 
 async function getProducts() {
   return await productsQuery({type: form.type, ids: form.products})

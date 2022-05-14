@@ -25,15 +25,15 @@
           >
             {{ col.value }}
           </q-td>
-          <q-td auto-width>
+          <!-- <q-td auto-width>
             <q-btn size="sm" color="accent" round dense @click="props.expand = !props.expand" :icon="props.expand ? 'remove' : 'add'" />
-          </q-td>
+          </q-td> -->
         </q-tr>
-        <q-tr v-show="props.expand" :props="props">
+        <!-- <q-tr v-show="props.expand" :props="props">
           <q-td colspan="100%">
             <div class="text-left">This is expand slot for row above: {{ props.row.name }}.</div>
           </q-td>
-        </q-tr>
+        </q-tr> -->
       </template>
     </q-table>
   </div>

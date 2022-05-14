@@ -37,7 +37,7 @@
         />
       </q-list>
     </q-drawer>
-    <q-page-container>
+    <q-page-container class="bg-light-green-1">
       <RouterView v-slot="{ Component }" :key="$route.fullPath">
         <template v-if="Component">
           <Transition mode="out-in">

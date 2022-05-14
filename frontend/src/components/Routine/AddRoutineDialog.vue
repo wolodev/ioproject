@@ -42,6 +42,9 @@ async function onSubmit() {
   const doc = await fireStore.collection('routines').add({
     name: form.name,
     type: form.type,
+    done: [],
+    weekdays: [],
+    products: [],
   })
   const data = await doc.get()
   emit('routine-added', data.id)
