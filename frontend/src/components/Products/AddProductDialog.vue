@@ -13,21 +13,15 @@
 
 <script setup lang="ts">
 import ProductsSearch from 'src/components/Products/ProductsSearch.vue';
-import { reactive, defineProps, defineEmits } from 'vue'
-import { careTypes } from 'src/consts';
+import { defineProps, defineEmits } from 'vue'
 
-const props = defineProps({
-  visible: Boolean,
-  routineView: Boolean,
-  careType: String //careType
-})
+const props = defineProps<{
+  visible: boolean,
+  routineView: boolean,
+  careType: string
+}>()
 const emit = defineEmits(['add'])
 const handleAdd = (id: number) => { emit('add', id) }
-
-const form = reactive({
-  name: '',
-  type: careTypes[0]
-})
 </script>
 
 <style scoped>

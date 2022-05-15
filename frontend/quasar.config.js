@@ -72,11 +72,7 @@ module.exports = configure(function (ctx) {
 
       // https://v2.quasar.dev/quasar-cli-webpack/handling-webpack
       // "chain" is a webpack-chain object https://github.com/neutrinojs/webpack-chain
-      env: {
-        API: 'http://ioproject-backend.herokuapp.com/',
-        API_LOGIN: 'admin',
-        API_PASSWORD: 'adminnimda',
-      },
+      env: require('dotenv').config().parsed,
       chainWebpack(/* chain */) {},
     },
 

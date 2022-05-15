@@ -27,12 +27,18 @@ const api = axios.create({
   // headers,
   // withCredentials: true,
 });
+
+
 const axiosGet = api.get;
 export default boot(async ({ app }) => {
-  // for use inside Vue files (Options API) through this.$axios and this.$api
-  const response = await axios.post(
-    process.env.API + 'login',
-    'username=admin&password=adminnimda'
+  // terrible, but api does't implement token refreshing,
+  // could have been secured by cors easily
+  if (!(process.env.API && process.env.API_LOGIN && process.env.API_PASSWORD)) {
+    console.log(process.env.API, 'XXX')
+    throw 'Required Api Credentials are not definied' + process.env.API_PASSWORD
+  }
+  const response = await api.post('login',
+    `username=${process.env.API_LOGIN}&password=${process.env.API_PASSWORD}`
   );
   const { access_token } = response.data;
   api.get = (url: string, config: AxiosRequestConfig = {}) => {
