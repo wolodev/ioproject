@@ -85,7 +85,6 @@ async function handleAdd(id: number) {
   })
 }
 
-
 const { query } = useProducts();
 const products: Ref<Product[]> = ref([])
 const answers: {

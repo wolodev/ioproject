@@ -44,14 +44,13 @@ import { useQuasar } from 'quasar';
 import useRoutine from 'src/composables/useRoutine';
 import { daysOfTheWeek } from 'src/consts';
 import useProducts from 'src/composables/useProducts';
-
 const { query: productsQuery } = useProducts();
 const { get: getRoutine, update: updateRoutine } = useRoutine();
 const router = useRoute();
 const $q = useQuasar();
 const daysOfTheWeekOptions = Object.entries(daysOfTheWeek).map(day => ({
-    id: day[1],
-    name: day[0]
+  id: day[1],
+  name: day[0]
 }))
 const promptVisible = ref(false)
 const editable = ref(false);
@@ -81,7 +80,6 @@ const products: Ref<Product[]> = ref([])
 if (form.products.length) {
   products.value = await getProducts();
 }
-
 
 async function getProducts() {
   return await productsQuery({type: form.type, ids: form.products})
