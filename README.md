@@ -1,7 +1,8 @@
-# Skin & hair routine app
+# Skair - skin and hair routine app
 
-## Projekt przygotowywany na przedmiot Inżynieria Oprogramowania, WMII UŁ sem. letni 2022
+### Project created for Software Engineering, Faculty of Mathematics and Informatics, University of Lodz, 2022
 
-### Frontend App built with Vue 3, Quasar and TS - /frontend
-### Crawler - Utilities for scraping web pages -/crawler
-### Backend - products api, build with FastApi and Postgres https://github.com/Ekajto/ioproject-backend
+App consists of:
+ - Frontend - App built with Vue 3, Quasar and TS - /frontend
+ - Crawler - Utilities for scraping web pages, credits [Wiktoria Więcek](https://github.com/wicek-w) -/crawlel
+ - Backend - Products api, built with FastApi and Postgres https://github.com/Ekajto/ioproject-backend
