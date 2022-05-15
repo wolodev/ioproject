@@ -12,7 +12,7 @@
         />
 
         <q-toolbar-title>
-          Skin and hair routine
+          Skair - skin and hair routine
         </q-toolbar-title>
       </q-toolbar>
     </q-header>

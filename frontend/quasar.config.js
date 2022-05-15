@@ -74,6 +74,8 @@ module.exports = configure(function (ctx) {
       // "chain" is a webpack-chain object https://github.com/neutrinojs/webpack-chain
       env: {
         API: 'http://ioproject-backend.herokuapp.com/',
+        API_LOGIN: 'admin',
+        API_PASSWORD: 'adminnimda',
       },
       chainWebpack(/* chain */) {},
     },
@@ -115,7 +117,7 @@ module.exports = configure(function (ctx) {
       // directives: [],
 
       // Quasar plugins
-      plugins: ['Dialog'],
+      plugins: ['Dialog', 'Meta'],
     },
 
     // animations: 'all', // --- includes all animations
@@ -153,8 +155,8 @@ module.exports = configure(function (ctx) {
       chainWebpackCustomSW(/* chain */) {},
 
       manifest: {
-        name: 'Quasar App',
-        short_name: 'Quasar App',
+        name: 'Skair',
+        short_name: 'Skair',
         description: '',
         display: 'standalone',
         orientation: 'portrait',
