@@ -35,7 +35,7 @@ export default function useFirebaseUi(
     signInSuccessUrl: '/account',
     signInOptions: [
       ...authProviders,
-      firebaseui.auth.AnonymousAuthProvider.PROVIDER_ID,
+      // firebaseui.auth.AnonymousAuthProvider.PROVIDER_ID,
     ],
     // tosUrl and privacyPolicyUrl accept either url string or a callback
     // function.
