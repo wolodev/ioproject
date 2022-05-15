@@ -2,10 +2,10 @@
   <q-dialog :model-value="visible">
     <q-card style="min-width: 80%">
       <ProductsSearch 
-      :productsManipulation="'add'"
-       v-on:add="handleAdd"
-       :routineView="props.routineView"
-       :careType="props.careType"
+        :productsManipulation="'add'"
+        v-on:add="handleAdd"
+        :routineView="props.routineView"
+        :careType="props.careType"
       />
     </q-card>
   </q-dialog>

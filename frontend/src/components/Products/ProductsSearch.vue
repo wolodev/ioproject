@@ -1,5 +1,5 @@
 <template>
-  <q-card class="column" id="products-filters">
+  <q-card class="column " id="products-filters">
     <q-card-section class="col-grow">
       <ProductsFilters 
         v-model:category="filters.category"

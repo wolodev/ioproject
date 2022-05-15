@@ -12,6 +12,7 @@
             v-model="dateModel"
             :events="eventFn"
             event-color="orange"
+            :options="optionsFn"
           />
         </div>
       </template>
@@ -22,6 +23,7 @@
           animated
           transition-prev="jump-up"
           transition-next="jump-up"
+          class="bg-light-green-1"
         >
 
           <q-tab-panel :key="dateModel" :name="dateModel">
@@ -39,7 +41,15 @@
               </template>
             </Suspense>
             <div v-else>
-              WHooops ! Wygląda na to że nie masz jeszcze rutyny w tym dniu. Dodaj
+              <q-card class="my-card">
+                <q-card-section>
+                  <div class="text-h6">Whooops!</div>
+                  <div class="text-subtitle2">It looks like you doent's have routine for this day of the week!</div>
+                </q-card-section>
+                <q-card-section>
+                  <q-btn color="primary" label="Go to routine management" @click="onClick" to="/routinesList"/>
+                </q-card-section>
+              </q-card>
             </div>
           </q-tab-panel>
         </q-tab-panels>
@@ -80,7 +90,11 @@ const eventFn = (day: string) => {
   return false;
 }
 
-const splitterModel= ref(30);
+function optionsFn (day: string) {
+  return day <= today;
+}
+
+const splitterModel= ref(20);
 const dateModel = ref(today); // ref('2019/02/01')
 
 </script>

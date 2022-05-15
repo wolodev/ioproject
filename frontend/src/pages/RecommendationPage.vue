@@ -4,13 +4,14 @@
       <q-splitter
         v-model="splitterModel"
         style="height: 180px; width: 80%;"
+        class="bg-grey-1 rounded-borders"
       >
 
         <template v-slot:before>
           <q-tabs
             v-model="tab"
             vertical
-            class="text-teal"
+            class="text-teal bg-grey-1"
           >
             <q-tab name="care"  label="Care Type" />
             <q-tab name="question-1"  label="Question 2" />
@@ -64,9 +65,8 @@
         </template>
 
       </q-splitter>
-      <div v-if="products.length">
-        <p>Recommended products</p>
-        <ProductsGrid :products = "products"/>
+      <div v-if="products.length" style="max-width: 80%">
+        <ProductsGrid v-on:add="handleAdd" :products = "products" productsManipulation="add" />
       </div>
   </q-page>
 </template>
@@ -75,9 +75,22 @@
 import { ref, reactive, Ref, watch } from 'vue';
 import useProducts from 'src/composables/useProducts';
 import ProductsGrid from 'src/components/Products/ProductsGrid.vue';
+import { useQuasar } from 'quasar';
+import { createParamsForDialog, addProduct } from '../components/Routine/SelectRotuineDialog';
+const $q = useQuasar();
+
+async function handleAdd(id: number) {
+  $q.dialog((await createParamsForDialog())).onOk((routine: Routine) => {
+    addProduct(routine, id);
+  })
+}
+
 const { query } = useProducts();
 const products: Ref<Product[]> = ref([])
-const answers = reactive({
+const answers: {
+  question1: booleanQueries;
+  question2: booleanQueries;
+} = reactive({
   question1: '',
   question2: ''
 })
@@ -123,7 +136,7 @@ const hairQuestions: question[] = [
         value: 'thick'
       },
     ]
-  }]
+}]
 
 
 const skinQuestions: question[] = [
@@ -162,14 +175,14 @@ const skinQuestions: question[] = [
         value: 'thick'
       },
     ]
-  }]
+}]
 
 interface question {
   question: string
   placeholder: string
   options: {
     label: string,
-    value: string,
+    value: booleanQueries,
   }[]
 }
 
@@ -184,12 +197,14 @@ function resetAnswers() {
 
 function skin() {
   resetAnswers()
+  type.value = 'skin';
   tab.value = 'question-1'
   questions.value = skinQuestions;
 }
 
 function hair() {
   resetAnswers()
+  type.value = 'hair';
   tab.value = 'question-1'
   questions.value = hairQuestions;
 }
@@ -199,7 +214,8 @@ function hair() {
 watch(answers, async (answer) => {
   if(answer.question1 && answer.question2) {
     products.value = await query({
-      type: type.value
+      type: type.value,
+      booleanQueries: [answer.question1, answer.question2]
     })
   } else {
     products.value = [];

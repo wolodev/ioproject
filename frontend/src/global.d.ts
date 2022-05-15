@@ -33,7 +33,7 @@ interface Routine {
   id: string;
   name: string;
   type: careType;
-  products?: number[];
+  products: number[];
   done: string[]; // YYYY/MM/DD format
   weekdays: number[];
 }
@@ -51,3 +51,15 @@ type days =
   | 'Satruday'
   | 'Sunday';
 type dayNumber = 1 | 2 | 3 | 4 | 5 | 6 | 7;
+
+type hairQueries =
+  | 'straight'
+  | 'wavy'
+  | 'curly'
+  | 'coily'
+  | 'fine'
+  | 'medium'
+  | 'thick'
+  | '';
+type skinQueries = 'oily' | 'dry' | 'normal' | '';
+type booleanQueries = hairQueries | skinQueries;

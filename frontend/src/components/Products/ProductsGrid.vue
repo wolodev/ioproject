@@ -12,7 +12,7 @@
     >
       <template v-slot:item="props">
         <div class="q-pa-md col-xs-12 col-sm-4 col-md-3">
-          <q-card class="justify-center items-center column relative">
+          <q-card class="justify-center items-center column relative ">
             <div v-if="cmpProps.productsManipulation" class="absolute on-right plus cursor-pointer" @click="changeState(props.row.product_id)">
               <q-icon size="25px" :name="cmpProps.productsManipulation" />
             </div>
